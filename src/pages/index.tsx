@@ -15,7 +15,7 @@ export default function Home() {
       <main>
         <Layout>
           <div className="flex flex-col text-center">
-            <div className="pt-32">
+            <div className="pt-16 md:pt-32">
               <h1 className="text-7xl font-semibold">Drop</h1>
               <h2 className="text-xl text-slate-400 pt-4">
                 Your next adventure awaits
