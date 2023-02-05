@@ -19,6 +19,7 @@ function NewDrop() {
 
   const createDrop = async () => {
     console.log("Creating");
+    if (loading) return;
     setLoading(true);
     try {
       const res = await fetch("/api/create", {

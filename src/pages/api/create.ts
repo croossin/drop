@@ -11,11 +11,7 @@ export default async function handler(
   const key = generateKey(6);
 
   // Todo: while loop to avoid collisions
-  try {
-    await redisClient.hmset(key, { ...body.location, views: 0, following: 0 });
-  } catch (e) {
-    console.log(e);
-  }
+  await redisClient.hmset(key, { ...body.location, views: 0, following: 0 });
 
   res.status(200).json({ key });
 }
