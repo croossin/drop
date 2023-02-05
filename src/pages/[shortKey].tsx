@@ -69,7 +69,7 @@ function ShortKey({ views, following, location }: Props) {
             </button>
             <button
               type="button"
-              className=" rounded-md border border-white/10 bg-gray-400/10  px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+              className="rounded-md border border-white/10 bg-gray-400/10  px-4 py-2 text-base font-medium text-white shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
               onClick={(e) => {
                 e.preventDefault();
                 try {
