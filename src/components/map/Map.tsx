@@ -31,7 +31,9 @@ function Map({ long, lat }: Props) {
     new mapboxgl.Marker().setLngLat(center).addTo(mapRef.current);
   }, []);
 
-  return <div ref={mapRefContainer} className="h-[200px] rounded-lg" />;
+  return (
+    <div ref={mapRefContainer} className="h-[200px] md:h-[300px] rounded-lg" />
+  );
 }
 
 export default Map;
