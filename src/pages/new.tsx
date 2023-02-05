@@ -3,28 +3,33 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import debounce from "lodash.debounce";
 import Head from "next/head";
 import { queryPlaces, Location } from "@/utils/mapbox";
+import Map from "@/components/map/Map";
 
 function NewDrop() {
   const inputRef = useRef<HTMLInputElement | null>(null);
-  const [location, setLocation] = useState("");
+  const [selectedLocation, setSelectedLocation] = useState<Location | null>(
+    null
+  );
+  const [locationQuery, setLocationQuery] = useState("");
   const [queryResults, setQueryResults] = useState<Array<Location>>([]);
 
   const search = useCallback(
-    debounce(async (location) => {
-      console.log("Searching: ", location);
-      const locations = await queryPlaces(location);
+    debounce(async (locationQuery) => {
+      const locations = await queryPlaces(locationQuery);
+      setSelectedLocation(null);
       setQueryResults(locations);
     }, 300),
     []
   );
 
   useEffect(() => {
-    if (location) {
-      search(location);
+    if (locationQuery) {
+      search(locationQuery);
     }
-  }, [location]);
+  }, [locationQuery]);
 
   useEffect(() => {
+    // Focus input
     if (inputRef.current) {
       inputRef.current.focus();
     }
@@ -39,16 +44,15 @@ function NewDrop() {
         <div className="text-center">
           <h1 className="text-2xl text-left pb-4">Enter your drop location</h1>
           <input
-            id="text"
             ref={inputRef}
             type="text"
-            className="block w-full rounded-r-[10px] rounded-l-[10px] pl-6 focus:ring-0 focus:outline-none focus:ring-offset-0 sm:text-sm min-h-[50px] lowercase text-black"
-            placeholder={""}
-            value={location}
+            required
+            className="w-full min-w-0 h-12 appearance-none rounded-md border-white/10 bg-gray-400/10 px-[calc(theme(spacing.3)-1px)] py-[calc(theme(spacing[1.5])-1px)] text-base leading-7 text-white placeholder-gray-500 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:w-64 sm:text-sm sm:leading-6 xl:w-full"
+            value={selectedLocation ? selectedLocation.text : locationQuery}
             onChange={(e) => {
-              setLocation(e.target.value);
+              setLocationQuery(e.target.value);
             }}
-            autoComplete="off"
+            placeholder="Javier's"
           />
           <div>
             <ul
@@ -56,19 +60,23 @@ function NewDrop() {
               className="mt-3 grid grid-cols-1 gap-3  bg-transparent"
             >
               {queryResults &&
-                location &&
+                locationQuery &&
+                !selectedLocation &&
                 queryResults.map((result) => {
                   return (
                     <li
                       key={result.id}
-                      className="col-span-1 flex rounded-md shadow-sm text-left bg-transparent"
+                      className="col-span-1 flex rounded-md shadow-sm text-left bg-transparent hover:cursor-pointer"
+                      onClick={() => {
+                        setSelectedLocation(result);
+                      }}
                     >
-                      <div className="flex flex-1 items-center justify-between truncate rounded-md border-t border-r border-b border-gray-200 bg-white">
+                      <div className="flex flex-1 items-center justify-between truncate rounded-md border border-b border-white/10 bg-gray-400/10">
                         <div className="flex-1 truncate px-4 py-2 text-sm">
-                          <span className="font-medium text-gray-900 hover:text-gray-600">
+                          <span className="font-medium text-white hover:text-gray-600">
                             {result.text}
                           </span>
-                          <p className="text-gray-500 text-xs">
+                          <p className="text-gray-400 text-xs">
                             {result.properties.address}
                           </p>
                         </div>
@@ -78,6 +86,22 @@ function NewDrop() {
                 })}
             </ul>
           </div>
+          {selectedLocation && (
+            <div className="mt-8">
+              <div>
+                <h1 className=" text-3xl">
+                  {selectedLocation.geometry.coordinates[1]},{" "}
+                  {selectedLocation.geometry.coordinates[0]}
+                </h1>
+              </div>
+              <div className="mt-2">
+                <Map
+                  long={selectedLocation.geometry.coordinates[0]}
+                  lat={selectedLocation.geometry.coordinates[1]}
+                />
+              </div>
+            </div>
+          )}
         </div>
       </Layout>
     </>
