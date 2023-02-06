@@ -23,7 +23,7 @@ function Map({ long, lat }: Props) {
     mapRef.current = new mapboxgl.Map({
       // @ts-ignore
       container: mapRefContainer.current,
-      style: "mapbox://styles/mapbox/streets-v12",
+      style: "mapbox://styles/croossin/cldsx66rj002q01qsdnnbcptr",
       center,
       zoom: 12,
     });
